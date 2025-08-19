@@ -1,0 +1,10 @@
+idf_component_register(SRCS "m5stack-tab5-lvgl.c"
+                            "gui.c"
+                            "hal.c"
+                            "os.c"
+                            "window_manager.c"
+                            "app_manager.c"
+                            "launcher.c"
+                            "settings.c"
+                            "music.c"
+                    INCLUDE_DIRS ".")
