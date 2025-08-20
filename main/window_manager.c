@@ -65,7 +65,7 @@ static wm_window_t* wm_create_window_internal(const char *title, bool closable, 
     /* Liquid-Glass panel style */
     lv_obj_set_style_radius(win->panel, 20, 0);
     lv_obj_set_style_pad_all(win->panel, 12, 0);
-    lv_obj_set_style_bg_color(win->panel, lv_color_hex(0xf5f5f5), 0);
+    lv_obj_set_style_bg_color(win->panel, lv_color_hex(0xf6f6f6), 0);
     lv_obj_set_style_bg_opa(win->panel, LV_OPA_100, 0); /* not translucent */
     lv_obj_set_style_border_width(win->panel, 1, 0);
     lv_obj_set_style_border_color(win->panel, lv_color_white(), 0);
