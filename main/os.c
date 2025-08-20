@@ -1,8 +1,8 @@
 #include "os.h"
-#include "app_manager.h"
-#include "launcher.h"
-#include "settings.h"
-#include "music.h"
+#include "managers/app_manager.h"
+#include "apps/launcher/launcher.h"
+#include "apps/settings/settings.h"
+#include "apps/music/music.h"
 
 void os_init(lv_disp_t *disp)
 {

@@ -1,0 +1,51 @@
+#include "gui.h"
+#include "managers/app_manager.h"
+#include "overlay_drawer.h"
+#include "apps/launcher/app_launcher.h"
+#include "apps/settings/app_settings.h"
+#include "apps/music_player/app_music_player.h"
+#include "apps/pwm_servo/app_pwm_servo.c"
+#include "apps/photo/app_photo.c"  // 添加照片应用头文件
+#include "apps/ark/app_ark.c"    // 添加Ark应用头文件
+#include "managers/gesture_handler.c"
+#include "utils/memory_utils.h"
+
+// 包含自定义字体（只包含一次）
+#include "assets/simhei_32.c"
+
+void gui_init(lv_disp_t *disp) 
+{
+    // 初始化应用管理器
+    app_manager_init();
+    
+    // 注册Overlay（按z_index顺序）
+    register_drawer_overlay();      // z_index=50
+    
+    // 注册应用
+    register_launcher_app();
+    register_settings_app();
+    register_music_player_app();
+    register_pwm_servo_app();
+    register_photo_app();
+    register_ark_app();             // 注册Ark应用
+    
+    // 启动所有auto_start的Overlay
+    overlay_t* overlay = app_manager_get_overlay_list();
+    while (overlay) {
+        if (overlay->auto_start) {
+            app_manager_show_overlay(overlay->base.name);
+        }
+        overlay = overlay->next;
+    }
+    
+    // 初始化手势处理（在overlay之后，确保手势区域在最顶层）
+    gesture_handler_init();
+    
+    // 启动启动器应用
+    app_manager_go_to_launcher();
+    
+    // 运行系统测试（可选，调试时使用）
+    // #ifdef DEBUG_SYSTEM_TESTS
+    // run_system_tests();
+    // #endif
+}

@@ -1,7 +1,7 @@
 #include "lv_demos.h"
 #include <stdio.h>
 #include "gui.h"
-#include "hal.h"
+#include "hals/hal.h"
 
 void app_main(void) {
     // Initialize hardware
