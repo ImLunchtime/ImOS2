@@ -160,6 +160,11 @@ bool music_play_current(music_player_data_t* data) {
         return false;
     }
     
+    // Stop any current playback first to prevent conflicts
+    if (data->play_state == PLAY_STATE_PLAYING || data->play_state == PLAY_STATE_PAUSED) {
+        hal_audio_stop_mp3();
+    }
+    
     const char* file_path = data->files[data->current_index].filename;
     printf("Playing: %s\n", file_path);
     
