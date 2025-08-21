@@ -46,18 +46,6 @@ void hal_init(void)
     bsp_io_expander_pi4ioe_init(i2c_bus_handle);
     printf("IO expander initialized\n");
 
-    // Initialize audio subsystem
-    hal_audio_init();
-
-    // Initialize display subsystem
-    hal_display_init();
-
-    // Initialize touchpad
-    hal_touchpad_init();
-
-    // Initialize SD card
-    hal_sdcard_init();
-
     g_hal_initialized = true;
     printf("HAL initialized successfully\n");
     

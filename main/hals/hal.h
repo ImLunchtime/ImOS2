@@ -3,6 +3,8 @@
 
 #include <bsp/esp-bsp.h>
 #include "lvgl.h"
+#include "hals/hal_audio.h"
+#include "hals/hal_sdcard.h"
 
 // Display and input device handles
 extern lv_disp_t *lvDisp;

@@ -15,8 +15,9 @@ dependencies:
   #   # All dependencies of `main` are public by default.
   #   public: true
   espressif/esp_lvgl_port: ^2.6.0
-  m5stack-tab5:
-    path: platforms/tab5/components/m5stack_tab5
-    git: https://github.com/m5stack/M5Tab5-UserDemo.git
+  # m5stack-tab5:
+  #   path: platforms/tab5/components/m5stack_tab5
+  #   git: https://github.com/m5stack/M5Tab5-UserDemo.git
   espressif/esp_lcd_ili9881c: '*'
-
+  chmorgan/esp-audio-player: 1.0.7
+  chmorgan/esp-file-iterator: 1.0.0

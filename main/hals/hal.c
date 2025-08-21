@@ -44,9 +44,32 @@ void hal_init(void)
     i2c_master_bus_handle_t i2c_bus_handle = bsp_i2c_get_handle();
     bsp_io_expander_pi4ioe_init(i2c_bus_handle);
 
+    // Initialize audio
+    hal_audio_init();
+    // Initialize SD card
+    hal_sdcard_init();
+
     // Initialize display and touch
     bsp_reset_tp();
-    lvDisp = bsp_display_start();
+    // Initialize display with custom config for larger stack
+    bsp_display_cfg_t display_cfg = {
+        .lvgl_port_cfg = {
+            .task_priority = 4,
+            .task_stack = 16384,  // Increase LVGL task stack size
+            .task_affinity = -1,
+            .task_max_sleep_ms = 500,
+            .timer_period_ms = 5,
+        },
+        .buffer_size = BSP_LCD_DRAW_BUFF_SIZE,
+        .double_buffer = BSP_LCD_DRAW_BUFF_DOUBLE,
+        .flags = {
+            .buff_dma = true,
+            .buff_spiram = false,
+            .sw_rotate = true,
+        }
+    };
+    
+    lvDisp = bsp_display_start_with_config(&display_cfg);
     lv_display_set_rotation(lvDisp, LV_DISPLAY_ROTATION_90);
     bsp_display_backlight_on();
 }
@@ -58,4 +81,4 @@ void hal_touchpad_init(void)
     lv_indev_set_type(lvTouchpad, LV_INDEV_TYPE_POINTER);
     lv_indev_set_read_cb(lvTouchpad, lvgl_read_cb);
     lv_indev_set_display(lvTouchpad, lvDisp);
-} 
+}
