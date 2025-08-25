@@ -11,7 +11,7 @@ static void app_btn_event(lv_event_t *e)
         app->launch();
     }
 }
-
+// Hello
 void launcher_open(void)
 {
     // The launcher is non-closable

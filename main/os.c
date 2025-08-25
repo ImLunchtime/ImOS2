@@ -3,6 +3,7 @@
 #include "apps/launcher/launcher.h"
 #include "apps/settings/settings.h"
 #include "apps/music/music.h"
+#include "apps/file_manager/file_manager.h"
 #include "control_center/control_center.h"
 
 void os_init(lv_disp_t *disp)
@@ -15,6 +16,7 @@ void os_init(lv_disp_t *disp)
     // Register user apps shown in Launcher
     app_manager_register(&APP_SETTINGS);
     app_manager_register(&APP_MUSIC);
+    app_manager_register(&APP_FILE_MANAGER);
 
     // Start launcher (non-closable, always present underneath)
     launcher_open();

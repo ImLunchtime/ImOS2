@@ -119,13 +119,13 @@ static wm_window_t* wm_create_window_internal(const char *title, bool closable, 
     if(height == 0) height = LV_PCT(70);
     lv_obj_set_size(win->panel, width, height);
 
-    // Title (top label)
-    if(title && title[0]) {
-        lv_obj_t *title_label = lv_label_create(win->panel);
-        lv_label_set_text(title_label, title);
-        lv_obj_set_style_text_font(title_label, lv_theme_get_font_large(win->panel), 0);
-        lv_obj_align(title_label, LV_ALIGN_TOP_LEFT, 4, 0);
-    }
+    // // Title (top label)
+    // if(title && title[0]) {
+    //     lv_obj_t *title_label = lv_label_create(win->panel);
+    //     lv_label_set_text(title_label, title);
+    //     lv_obj_set_style_text_font(title_label, lv_theme_get_font_large(win->panel), 0);
+    //     lv_obj_align(title_label, LV_ALIGN_TOP_LEFT, 4, 0);
+    // }
 
     // Content container
     win->content = lv_obj_create(win->panel);
