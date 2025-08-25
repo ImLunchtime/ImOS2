@@ -364,7 +364,7 @@ static void create_music_ui(lv_obj_t* parent) {
 // Main launch function
 static void music_launch(void) {
     // Create window
-    g_music_data.window = wm_open_window("Music Player", true, LV_PCT(70), LV_PCT(80));
+    g_music_data.window = wm_open_window("Music Player", true, LV_PCT(70), LV_PCT(60));
     lv_obj_t* content = wm_get_content(g_music_data.window);
     
     // Create UI

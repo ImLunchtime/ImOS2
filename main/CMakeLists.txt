@@ -9,4 +9,5 @@ idf_component_register(SRCS "m5stack-tab5-lvgl.c"
                             "apps/music/music.c"
                             "hals/hal_audio.c"
                             "hals/hal_sdcard.c"
+                            "control_center/control_center.c"
                     INCLUDE_DIRS ".")

@@ -4,3 +4,5 @@
 # 忽略 ESP-IDF managed components
 /managed_components/
 
+/.vscode/
+/.trae/

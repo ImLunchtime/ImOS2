@@ -5,9 +5,29 @@
 
 typedef struct wm_window_t wm_window_t;
 
+// Window positioning options
+typedef enum {
+    WM_POS_DEFAULT,     // Default stacked positioning
+    WM_POS_BOTTOM,      // Bottom of screen
+    WM_POS_TOP,         // Top of screen
+    WM_POS_CENTER,      // Center of screen
+    WM_POS_CUSTOM       // Custom x,y coordinates
+} wm_position_t;
+
+typedef struct {
+    wm_position_t pos_type;
+    lv_coord_t x;       // Used for WM_POS_CUSTOM
+    lv_coord_t y;       // Used for WM_POS_CUSTOM
+    lv_coord_t offset_x; // Additional offset for predefined positions
+    lv_coord_t offset_y; // Additional offset for predefined positions
+} wm_position_config_t;
+
 // Open a new window (pop-up style). If width/height are 0, defaults are used.
 // Windows cannot be moved. If closable is false, tapping outside will not close it.
 wm_window_t* wm_open_window(const char *title, bool closable, lv_coord_t width, lv_coord_t height);
+
+// Open a window with custom positioning
+wm_window_t* wm_open_window_positioned(const char *title, bool closable, lv_coord_t width, lv_coord_t height, const wm_position_config_t *pos_config);
 
 // Get the content container for adding widgets into the window.
 lv_obj_t* wm_get_content(wm_window_t *win);

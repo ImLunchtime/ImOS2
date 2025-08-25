@@ -41,7 +41,41 @@ static void overlay_click_handler(lv_event_t *e)
     }
 }
 
-static wm_window_t* wm_create_window_internal(const char *title, bool closable, lv_coord_t width, lv_coord_t height)
+static void position_window_panel(lv_obj_t *panel, const wm_position_config_t *pos_config)
+{
+    if (!pos_config || pos_config->pos_type == WM_POS_DEFAULT) {
+        // Default positioning logic
+        lv_coord_t x = 30, y = 30;
+        if(s_stack_sz > 0) {
+            lv_obj_t *parent_panel = s_stack[s_stack_sz - 1]->panel;
+            x = lv_obj_get_x(parent_panel) + 70;
+            y = lv_obj_get_y(parent_panel) + 70;
+        }
+        lv_obj_align(panel, LV_ALIGN_TOP_LEFT, x, y);
+        return;
+    }
+
+    switch (pos_config->pos_type) {
+        case WM_POS_BOTTOM:
+            lv_obj_align(panel, LV_ALIGN_BOTTOM_MID, pos_config->offset_x, pos_config->offset_y);
+            break;
+        case WM_POS_TOP:
+            lv_obj_align(panel, LV_ALIGN_TOP_MID, pos_config->offset_x, pos_config->offset_y);
+            break;
+        case WM_POS_CENTER:
+            lv_obj_align(panel, LV_ALIGN_CENTER, pos_config->offset_x, pos_config->offset_y);
+            break;
+        case WM_POS_CUSTOM:
+            lv_obj_set_pos(panel, pos_config->x, pos_config->y);
+            break;
+        default:
+            // Fallback to default
+            position_window_panel(panel, NULL);
+            break;
+    }
+}
+
+static wm_window_t* wm_create_window_internal(const char *title, bool closable, lv_coord_t width, lv_coord_t height, const wm_position_config_t *pos_config)
 {
     if(s_stack_sz >= WM_MAX_WINDOWS) return NULL;
 
@@ -103,14 +137,8 @@ static wm_window_t* wm_create_window_internal(const char *title, bool closable, 
     lv_obj_set_style_pad_bottom(win->content, 8, 0);
     lv_obj_set_flex_flow(win->content, LV_FLEX_FLOW_COLUMN);
 
-    // Position: top-left; offset +20,+20 from parent (previous top) if exists
-    lv_coord_t x = 30, y = 30;
-    if(s_stack_sz > 0) {
-        lv_obj_t *parent_panel = s_stack[s_stack_sz - 1]->panel;
-        x = lv_obj_get_x(parent_panel) + 70;
-        y = lv_obj_get_y(parent_panel) + 70;
-    }
-    lv_obj_align(win->panel, LV_ALIGN_TOP_LEFT, x, y);
+    // Position the window using the new positioning system
+    position_window_panel(win->panel, pos_config);
 
     // Push to stack (topmost)
     s_stack[s_stack_sz++] = win;
@@ -120,7 +148,12 @@ static wm_window_t* wm_create_window_internal(const char *title, bool closable, 
 
 wm_window_t* wm_open_window(const char *title, bool closable, lv_coord_t width, lv_coord_t height)
 {
-    return wm_create_window_internal(title, closable, width, height);
+    return wm_create_window_internal(title, closable, width, height, NULL);
+}
+
+wm_window_t* wm_open_window_positioned(const char *title, bool closable, lv_coord_t width, lv_coord_t height, const wm_position_config_t *pos_config)
+{
+    return wm_create_window_internal(title, closable, width, height, pos_config);
 }
 
 lv_obj_t* wm_get_content(wm_window_t *win)

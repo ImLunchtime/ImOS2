@@ -3,6 +3,7 @@
 #include "apps/launcher/launcher.h"
 #include "apps/settings/settings.h"
 #include "apps/music/music.h"
+#include "control_center/control_center.h"
 
 void os_init(lv_disp_t *disp)
 {
@@ -17,4 +18,7 @@ void os_init(lv_disp_t *disp)
 
     // Start launcher (non-closable, always present underneath)
     launcher_open();
+    
+    // Initialize control center system AFTER launcher to ensure it's on top
+    control_center_init();
 }
