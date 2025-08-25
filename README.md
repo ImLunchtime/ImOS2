@@ -1,6 +1,7 @@
-# m5stack-tab5-lvgl
+# ImOS2(Temporary name)
 
-## 截图
-  <a href="docs/demo.jpg" target="_blank" title="截图">
-    <img src="docs/demo.jpg" width="100%" />
-  </a>
+A remade better version of the original ImOS.
+
+# ImOS 2（暂用名）
+
+一个几乎完全重做的ImOS。
