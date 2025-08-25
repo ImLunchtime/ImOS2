@@ -334,6 +334,12 @@ static void create_music_ui(lv_obj_t* parent) {
     // Previous button
     g_prev_btn = lv_btn_create(btn_container);
     lv_obj_set_size(g_prev_btn, 50, 50);
+    // Add white translucent background and opaque white border
+    lv_obj_set_style_bg_color(g_prev_btn, lv_color_white(), 0);
+    lv_obj_set_style_bg_opa(g_prev_btn, LV_OPA_20, 0);  // 20% opacity background
+    lv_obj_set_style_border_color(g_prev_btn, lv_color_white(), 0);
+    lv_obj_set_style_border_width(g_prev_btn, 2, 0);
+    lv_obj_set_style_border_opa(g_prev_btn, LV_OPA_100, 0);  // Opaque border
     lv_obj_add_event_cb(g_prev_btn, prev_event_cb, LV_EVENT_CLICKED, NULL);
     lv_obj_t* prev_label = lv_label_create(g_prev_btn);
     lv_label_set_text(prev_label, LV_SYMBOL_PREV);
@@ -342,6 +348,12 @@ static void create_music_ui(lv_obj_t* parent) {
     // Play/Pause button
     g_play_pause_btn = lv_btn_create(btn_container);
     lv_obj_set_size(g_play_pause_btn, 60, 60);
+    // Add white translucent background and opaque white border
+    lv_obj_set_style_bg_color(g_play_pause_btn, lv_color_white(), 0);
+    lv_obj_set_style_bg_opa(g_play_pause_btn, LV_OPA_20, 0);  // 20% opacity background
+    lv_obj_set_style_border_color(g_play_pause_btn, lv_color_white(), 0);
+    lv_obj_set_style_border_width(g_play_pause_btn, 2, 0);
+    lv_obj_set_style_border_opa(g_play_pause_btn, LV_OPA_100, 0);  // Opaque border
     lv_obj_add_event_cb(g_play_pause_btn, play_pause_event_cb, LV_EVENT_CLICKED, NULL);
     lv_obj_t* play_label = lv_label_create(g_play_pause_btn);
     lv_label_set_text(play_label, LV_SYMBOL_PLAY);
@@ -350,6 +362,12 @@ static void create_music_ui(lv_obj_t* parent) {
     // Next button
     g_next_btn = lv_btn_create(btn_container);
     lv_obj_set_size(g_next_btn, 50, 50);
+    // Add white translucent background and opaque white border
+    lv_obj_set_style_bg_color(g_next_btn, lv_color_white(), 0);
+    lv_obj_set_style_bg_opa(g_next_btn, LV_OPA_20, 0);  // 20% opacity background
+    lv_obj_set_style_border_color(g_next_btn, lv_color_white(), 0);
+    lv_obj_set_style_border_width(g_next_btn, 2, 0);
+    lv_obj_set_style_border_opa(g_next_btn, LV_OPA_100, 0);  // Opaque border
     lv_obj_add_event_cb(g_next_btn, next_event_cb, LV_EVENT_CLICKED, NULL);
     lv_obj_t* next_label = lv_label_create(g_next_btn);
     lv_label_set_text(next_label, LV_SYMBOL_NEXT);
@@ -363,8 +381,9 @@ static void create_music_ui(lv_obj_t* parent) {
 
 // Main launch function
 static void music_launch(void) {
-    // Create window
-    g_music_data.window = wm_open_window("Music Player", true, LV_PCT(70), LV_PCT(60));
+    // Create window with red background color #F05C5E
+    lv_color_t red_bg = lv_color_hex(0xFFAAAA);
+    g_music_data.window = wm_open_window_with_color("Music Player", true, LV_PCT(70), LV_PCT(60), red_bg);
     lv_obj_t* content = wm_get_content(g_music_data.window);
     
     // Create UI
@@ -378,7 +397,6 @@ static void music_launch(void) {
     refresh_file_list();
     update_current_song_display();
 }
-
 // App definition
 const app_t APP_MUSIC = {
     .id = "music",

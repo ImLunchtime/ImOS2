@@ -75,7 +75,7 @@ static void position_window_panel(lv_obj_t *panel, const wm_position_config_t *p
     }
 }
 
-static wm_window_t* wm_create_window_internal(const char *title, bool closable, lv_coord_t width, lv_coord_t height, const wm_position_config_t *pos_config)
+static wm_window_t* wm_create_window_internal(const char *title, bool closable, lv_coord_t width, lv_coord_t height, const wm_position_config_t *pos_config, lv_color_t *bg_color)
 {
     if(s_stack_sz >= WM_MAX_WINDOWS) return NULL;
 
@@ -99,7 +99,14 @@ static wm_window_t* wm_create_window_internal(const char *title, bool closable, 
     /* Liquid-Glass panel style */
     lv_obj_set_style_radius(win->panel, 20, 0);
     lv_obj_set_style_pad_all(win->panel, 12, 0);
-    lv_obj_set_style_bg_color(win->panel, lv_color_hex(0xf6f6f6), 0);
+    
+    // Use custom background color if provided, otherwise use default
+    if (bg_color) {
+        lv_obj_set_style_bg_color(win->panel, *bg_color, 0);
+    } else {
+        lv_obj_set_style_bg_color(win->panel, lv_color_hex(0xf6f6f6), 0);
+    }
+    
     lv_obj_set_style_bg_opa(win->panel, LV_OPA_100, 0); /* not translucent */
     lv_obj_set_style_border_width(win->panel, 1, 0);
     lv_obj_set_style_border_color(win->panel, lv_color_white(), 0);
@@ -118,14 +125,6 @@ static wm_window_t* wm_create_window_internal(const char *title, bool closable, 
     if(width == 0)  width = LV_PCT(80);
     if(height == 0) height = LV_PCT(70);
     lv_obj_set_size(win->panel, width, height);
-
-    // // Title (top label)
-    // if(title && title[0]) {
-    //     lv_obj_t *title_label = lv_label_create(win->panel);
-    //     lv_label_set_text(title_label, title);
-    //     lv_obj_set_style_text_font(title_label, lv_theme_get_font_large(win->panel), 0);
-    //     lv_obj_align(title_label, LV_ALIGN_TOP_LEFT, 4, 0);
-    // }
 
     // Content container
     win->content = lv_obj_create(win->panel);
@@ -148,12 +147,22 @@ static wm_window_t* wm_create_window_internal(const char *title, bool closable, 
 
 wm_window_t* wm_open_window(const char *title, bool closable, lv_coord_t width, lv_coord_t height)
 {
-    return wm_create_window_internal(title, closable, width, height, NULL);
+    return wm_create_window_internal(title, closable, width, height, NULL, NULL);
 }
 
 wm_window_t* wm_open_window_positioned(const char *title, bool closable, lv_coord_t width, lv_coord_t height, const wm_position_config_t *pos_config)
 {
-    return wm_create_window_internal(title, closable, width, height, pos_config);
+    return wm_create_window_internal(title, closable, width, height, pos_config, NULL);
+}
+
+wm_window_t* wm_open_window_with_color(const char *title, bool closable, lv_coord_t width, lv_coord_t height, lv_color_t bg_color)
+{
+    return wm_create_window_internal(title, closable, width, height, NULL, &bg_color);
+}
+
+wm_window_t* wm_open_window_positioned_with_color(const char *title, bool closable, lv_coord_t width, lv_coord_t height, const wm_position_config_t *pos_config, lv_color_t bg_color)
+{
+    return wm_create_window_internal(title, closable, width, height, pos_config, &bg_color);
 }
 
 lv_obj_t* wm_get_content(wm_window_t *win)

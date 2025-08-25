@@ -43,11 +43,15 @@ static void create_bottom_bar_ui(void)
     lv_obj_set_size(g_control_center.bottom_bar, screen_width, BOTTOM_BAR_HEIGHT);
     lv_obj_set_pos(g_control_center.bottom_bar, 0, screen_height - BOTTOM_BAR_HEIGHT);
     
-    // Style the bottom bar
-    lv_obj_set_style_bg_color(g_control_center.bottom_bar, lv_color_hex(0x2C2C2C), 0);
-    lv_obj_set_style_bg_opa(g_control_center.bottom_bar, LV_OPA_90, 0);
+    // Style the bottom bar with transparent-white gradient
+    lv_obj_set_style_bg_color(g_control_center.bottom_bar, lv_color_white(), 0);
+    lv_obj_set_style_bg_grad_color(g_control_center.bottom_bar, lv_color_white(), 0);
+    lv_obj_set_style_bg_grad_dir(g_control_center.bottom_bar, LV_GRAD_DIR_VER, 0);
+    lv_obj_set_style_bg_main_stop(g_control_center.bottom_bar, 0, 0);     // Start at 0% with full opacity
+    lv_obj_set_style_bg_grad_stop(g_control_center.bottom_bar, 255, 0);   // End at 100% with full opacity
+    lv_obj_set_style_bg_opa(g_control_center.bottom_bar, LV_OPA_30, 0);   // Overall transparency (30% opacity)
     lv_obj_set_style_border_width(g_control_center.bottom_bar, 1, 0);
-    lv_obj_set_style_border_color(g_control_center.bottom_bar, lv_color_hex(0x404040), 0);
+    lv_obj_set_style_border_color(g_control_center.bottom_bar, lv_color_hex(0xE0E0E0), 0); // Light gray border
     lv_obj_set_style_border_side(g_control_center.bottom_bar, LV_BORDER_SIDE_TOP, 0);
     lv_obj_set_style_radius(g_control_center.bottom_bar, 0, 0);
     lv_obj_set_style_pad_all(g_control_center.bottom_bar, 10, 0);
@@ -74,7 +78,7 @@ static void create_bottom_bar_ui(void)
     // Volume icon/label
     g_control_center.volume_label = lv_label_create(volume_container);
     lv_label_set_text(g_control_center.volume_label, "<)))");
-    lv_obj_set_style_text_color(g_control_center.volume_label, lv_color_white(), 0);
+    lv_obj_set_style_text_color(g_control_center.volume_label, lv_color_black(), 0);
     lv_obj_set_style_margin_right(g_control_center.volume_label, 10, 0);
     
     // Volume slider
@@ -102,7 +106,7 @@ static void create_bottom_bar_ui(void)
     // Volume value label
     g_control_center.value_label = lv_label_create(volume_container);
     lv_label_set_text_fmt(g_control_center.value_label, "%d%%", current_volume);
-    lv_obj_set_style_text_color(g_control_center.value_label, lv_color_white(), 0);
+    lv_obj_set_style_text_color(g_control_center.value_label, lv_color_black(), 0);
     lv_obj_set_style_margin_left(g_control_center.value_label, 10, 0);
     lv_obj_set_width(g_control_center.value_label, 40); // Fixed width for consistent layout
     

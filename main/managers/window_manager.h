@@ -29,6 +29,12 @@ wm_window_t* wm_open_window(const char *title, bool closable, lv_coord_t width, 
 // Open a window with custom positioning
 wm_window_t* wm_open_window_positioned(const char *title, bool closable, lv_coord_t width, lv_coord_t height, const wm_position_config_t *pos_config);
 
+// Open a window with custom background color
+wm_window_t* wm_open_window_with_color(const char *title, bool closable, lv_coord_t width, lv_coord_t height, lv_color_t bg_color);
+
+// Open a window with custom positioning and background color
+wm_window_t* wm_open_window_positioned_with_color(const char *title, bool closable, lv_coord_t width, lv_coord_t height, const wm_position_config_t *pos_config, lv_color_t bg_color);
+
 // Get the content container for adding widgets into the window.
 lv_obj_t* wm_get_content(wm_window_t *win);
 
