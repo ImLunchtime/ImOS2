@@ -3,7 +3,7 @@
 #include "lvgl.h"
 
 // Declare the HarmonyOS Sans font
-LV_FONT_DECLARE(yinpin_hm_20);
+LV_FONT_DECLARE(yinpin_hm_light_20);
 
 // Menu item builder variants
 typedef enum {
@@ -200,7 +200,7 @@ static lv_obj_t *create_text(lv_obj_t *parent, const char *icon, const char *txt
     if(txt) {
         label = lv_label_create(obj);
         lv_label_set_text(label, txt);
-        lv_obj_set_style_text_font(label, &yinpin_hm_20, 0);
+        lv_obj_set_style_text_font(label, &yinpin_hm_light_20, 0);
         lv_label_set_long_mode(label, LV_LABEL_LONG_SCROLL_CIRCULAR);
         lv_obj_set_flex_grow(label, 1);
     }

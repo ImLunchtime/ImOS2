@@ -10,7 +10,7 @@
 #include <sys/stat.h>
 
 // Declare the HarmonyOS Sans font
-LV_FONT_DECLARE(yinpin_hm_20);
+LV_FONT_DECLARE(yinpin_hm_light_20);
 
 // Global music player data
 static music_player_data_t g_music_data = {
@@ -320,7 +320,7 @@ static void create_music_ui(lv_obj_t* parent) {
     g_current_song_label = lv_label_create(parent);
     lv_label_set_text(g_current_song_label, "未选择歌曲");
     lv_obj_set_style_text_align(g_current_song_label, LV_TEXT_ALIGN_CENTER, 0);
-    lv_obj_set_style_text_font(g_current_song_label, &yinpin_hm_20, 0);
+    lv_obj_set_style_text_font(g_current_song_label, &yinpin_hm_light_20, 0);
     lv_obj_set_width(g_current_song_label, LV_PCT(100));
     lv_label_set_long_mode(g_current_song_label, LV_LABEL_LONG_SCROLL_CIRCULAR);
     
@@ -339,8 +339,8 @@ static void create_music_ui(lv_obj_t* parent) {
     g_prev_btn = lv_btn_create(btn_container);
     lv_obj_set_size(g_prev_btn, 50, 50);
     // Add white translucent background and opaque white border
-    lv_obj_set_style_bg_color(g_prev_btn, lv_color_white(), 0);
-    lv_obj_set_style_bg_opa(g_prev_btn, LV_OPA_20, 0);  // 20% opacity background
+    lv_obj_set_style_bg_color(g_prev_btn, lv_color_hex(0xF05C5E), 0);
+    lv_obj_set_style_bg_opa(g_prev_btn, LV_OPA_50, 0);  // 50% opacity background
     lv_obj_set_style_border_color(g_prev_btn, lv_color_white(), 0);
     lv_obj_set_style_border_width(g_prev_btn, 2, 0);
     lv_obj_set_style_border_opa(g_prev_btn, LV_OPA_100, 0);  // Opaque border
@@ -353,8 +353,8 @@ static void create_music_ui(lv_obj_t* parent) {
     g_play_pause_btn = lv_btn_create(btn_container);
     lv_obj_set_size(g_play_pause_btn, 60, 60);
     // Add white translucent background and opaque white border
-    lv_obj_set_style_bg_color(g_play_pause_btn, lv_color_white(), 0);
-    lv_obj_set_style_bg_opa(g_play_pause_btn, LV_OPA_20, 0);  // 20% opacity background
+    lv_obj_set_style_bg_color(g_play_pause_btn, lv_color_hex(0xF05C5E), 0);
+    lv_obj_set_style_bg_opa(g_play_pause_btn, LV_OPA_50, 0);  // 50% opacity background
     lv_obj_set_style_border_color(g_play_pause_btn, lv_color_white(), 0);
     lv_obj_set_style_border_width(g_play_pause_btn, 2, 0);
     lv_obj_set_style_border_opa(g_play_pause_btn, LV_OPA_100, 0);  // Opaque border
@@ -367,8 +367,8 @@ static void create_music_ui(lv_obj_t* parent) {
     g_next_btn = lv_btn_create(btn_container);
     lv_obj_set_size(g_next_btn, 50, 50);
     // Add white translucent background and opaque white border
-    lv_obj_set_style_bg_color(g_next_btn, lv_color_white(), 0);
-    lv_obj_set_style_bg_opa(g_next_btn, LV_OPA_20, 0);  // 20% opacity background
+    lv_obj_set_style_bg_color(g_next_btn, lv_color_hex(0xF05C5E), 0);
+    lv_obj_set_style_bg_opa(g_next_btn, LV_OPA_50, 0);  // 50% opacity background
     lv_obj_set_style_border_color(g_next_btn, lv_color_white(), 0);
     lv_obj_set_style_border_width(g_next_btn, 2, 0);
     lv_obj_set_style_border_opa(g_next_btn, LV_OPA_100, 0);  // Opaque border
@@ -386,7 +386,7 @@ static void create_music_ui(lv_obj_t* parent) {
 // Main launch function
 static void music_launch(void) {
     // Create window with red background color #F05C5E
-    lv_color_t red_bg = lv_color_hex(0xFFAAAA);
+    lv_color_t red_bg = lv_color_hex(0xF5F5F5);
     g_music_data.window = wm_open_window_with_color("音乐播放器", true, LV_PCT(70), LV_PCT(60), red_bg);
     lv_obj_t* content = wm_get_content(g_music_data.window);
     

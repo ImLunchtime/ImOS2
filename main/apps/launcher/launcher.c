@@ -5,7 +5,7 @@
 #include <string.h>
 
 // Declare the HarmonyOS Sans font
-LV_FONT_DECLARE(yinpin_hm_20);
+LV_FONT_DECLARE(yinpin_hm_light_20);
 
 static void app_btn_event(lv_event_t *e)
 {
@@ -69,7 +69,7 @@ void launcher_open(void)
         }
         lv_label_set_text(lbl, chinese_name);
         lv_obj_set_style_text_color(lbl, lv_color_black(), 0);
-        lv_obj_set_style_text_font(lbl, &yinpin_hm_20, 0);
+        lv_obj_set_style_text_font(lbl, &yinpin_hm_light_20, 0);
         lv_obj_center(lbl);
     }
 }
