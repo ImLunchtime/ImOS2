@@ -9,6 +9,9 @@
 #include <dirent.h>
 #include <sys/stat.h>
 
+// Declare the HarmonyOS Sans font
+LV_FONT_DECLARE(yinpin_hm_20);
+
 // Global music player data
 static music_player_data_t g_music_data = {
     .files = NULL,
@@ -315,8 +318,9 @@ static void create_music_ui(lv_obj_t* parent) {
     
     // Current song display
     g_current_song_label = lv_label_create(parent);
-    lv_label_set_text(g_current_song_label, "No song selected");
+    lv_label_set_text(g_current_song_label, "未选择歌曲");
     lv_obj_set_style_text_align(g_current_song_label, LV_TEXT_ALIGN_CENTER, 0);
+    lv_obj_set_style_text_font(g_current_song_label, &yinpin_hm_20, 0);
     lv_obj_set_width(g_current_song_label, LV_PCT(100));
     lv_label_set_long_mode(g_current_song_label, LV_LABEL_LONG_SCROLL_CIRCULAR);
     
@@ -383,7 +387,7 @@ static void create_music_ui(lv_obj_t* parent) {
 static void music_launch(void) {
     // Create window with red background color #F05C5E
     lv_color_t red_bg = lv_color_hex(0xFFAAAA);
-    g_music_data.window = wm_open_window_with_color("Music Player", true, LV_PCT(70), LV_PCT(60), red_bg);
+    g_music_data.window = wm_open_window_with_color("音乐播放器", true, LV_PCT(70), LV_PCT(60), red_bg);
     lv_obj_t* content = wm_get_content(g_music_data.window);
     
     // Create UI
@@ -400,6 +404,6 @@ static void music_launch(void) {
 // App definition
 const app_t APP_MUSIC = {
     .id = "music",
-    .name = "Music",
+    .name = "音乐",
     .launch = music_launch
 };

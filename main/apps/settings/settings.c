@@ -2,6 +2,9 @@
 #include "managers/window_manager.h"
 #include "lvgl.h"
 
+// Declare the HarmonyOS Sans font
+LV_FONT_DECLARE(yinpin_hm_20);
+
 // Menu item builder variants
 typedef enum {
     LV_MENU_ITEM_BUILDER_VARIANT_1,
@@ -24,7 +27,7 @@ static void create_settings_menu(lv_obj_t *parent);
 static void settings_launch(void)
 {
     // Open a window for the settings app
-    settings_window = wm_open_window("Settings", true, LV_PCT(70), LV_PCT(70));
+    settings_window = wm_open_window("设置", true, LV_PCT(70), LV_PCT(70));
     lv_obj_t *content = wm_get_content(settings_window);
     
     // Create the settings menu inside the window
@@ -59,55 +62,55 @@ static void create_settings_menu(lv_obj_t *parent)
     lv_obj_set_style_pad_hor(sub_display_page, lv_obj_get_style_pad_left(lv_menu_get_main_header(settings_menu), 0), 0);
     lv_menu_separator_create(sub_display_page);
     section = lv_menu_section_create(sub_display_page);
-    create_slider(section, LV_SYMBOL_SETTINGS, "Brightness", 0, 100, 75);
-    create_switch(section, LV_SYMBOL_EYE_OPEN, "Auto Brightness", false);
-    create_slider(section, LV_SYMBOL_SETTINGS, "Screen Timeout", 10, 300, 60);
+    create_slider(section, LV_SYMBOL_SETTINGS, "亮度", 0, 100, 75);
+    create_switch(section, LV_SYMBOL_EYE_OPEN, "自动亮度", false);
+    create_slider(section, LV_SYMBOL_SETTINGS, "屏幕超时", 10, 300, 60);
     
     // Create Sound settings page
     lv_obj_t *sub_sound_page = lv_menu_page_create(settings_menu, NULL);
     lv_obj_set_style_pad_hor(sub_sound_page, lv_obj_get_style_pad_left(lv_menu_get_main_header(settings_menu), 0), 0);
     lv_menu_separator_create(sub_sound_page);
     section = lv_menu_section_create(sub_sound_page);
-    create_switch(section, LV_SYMBOL_AUDIO, "Sound", true);
-    create_slider(section, LV_SYMBOL_VOLUME_MAX, "Volume", 0, 100, 50);
-    create_switch(section, LV_SYMBOL_BELL, "Notifications", true);
+    create_switch(section, LV_SYMBOL_AUDIO, "声音", true);
+    create_slider(section, LV_SYMBOL_VOLUME_MAX, "音量", 0, 100, 50);
+    create_switch(section, LV_SYMBOL_BELL, "通知", true);
     
     // Create System settings page
     lv_obj_t *sub_system_page = lv_menu_page_create(settings_menu, NULL);
     lv_obj_set_style_pad_hor(sub_system_page, lv_obj_get_style_pad_left(lv_menu_get_main_header(settings_menu), 0), 0);
     lv_menu_separator_create(sub_system_page);
     section = lv_menu_section_create(sub_system_page);
-    create_text(section, LV_SYMBOL_SETTINGS, "Device Name: M5Stack Tab5", LV_MENU_ITEM_BUILDER_VARIANT_1);
-    create_text(section, LV_SYMBOL_WIFI, "WiFi Settings", LV_MENU_ITEM_BUILDER_VARIANT_1);
-    create_text(section, LV_SYMBOL_BLUETOOTH, "Bluetooth Settings", LV_MENU_ITEM_BUILDER_VARIANT_1);
-    create_switch(section, LV_SYMBOL_POWER, "Power Saving", false);
+    create_text(section, LV_SYMBOL_SETTINGS, "设备名称: M5Stack Tab5", LV_MENU_ITEM_BUILDER_VARIANT_1);
+    create_text(section, LV_SYMBOL_WIFI, "WiFi设置", LV_MENU_ITEM_BUILDER_VARIANT_1);
+    create_text(section, LV_SYMBOL_BLUETOOTH, "蓝牙设置", LV_MENU_ITEM_BUILDER_VARIANT_1);
+    create_switch(section, LV_SYMBOL_POWER, "省电模式", false);
     
     // Create Software Info page
     lv_obj_t *sub_software_info_page = lv_menu_page_create(settings_menu, NULL);
     lv_obj_set_style_pad_hor(sub_software_info_page, lv_obj_get_style_pad_left(lv_menu_get_main_header(settings_menu), 0), 0);
     section = lv_menu_section_create(sub_software_info_page);
-    create_text(section, NULL, "Firmware Version: 1.0.0", LV_MENU_ITEM_BUILDER_VARIANT_1);
-    create_text(section, NULL, "LVGL Version: 9.x", LV_MENU_ITEM_BUILDER_VARIANT_1);
-    create_text(section, NULL, "ESP-IDF Version: 5.x", LV_MENU_ITEM_BUILDER_VARIANT_1);
-    create_text(section, NULL, "Build Date: " __DATE__, LV_MENU_ITEM_BUILDER_VARIANT_1);
+    create_text(section, NULL, "固件版本: 0.0.1b241", LV_MENU_ITEM_BUILDER_VARIANT_1);
+    create_text(section, NULL, "LVGL版本: 9.2.2", LV_MENU_ITEM_BUILDER_VARIANT_1);
+    create_text(section, NULL, "ESP-IDF版本: 5.4.1", LV_MENU_ITEM_BUILDER_VARIANT_1);
+    create_text(section, NULL, "构建日期: " __DATE__, LV_MENU_ITEM_BUILDER_VARIANT_1);
     
     // Create Legal Info page
     lv_obj_t *sub_legal_info_page = lv_menu_page_create(settings_menu, NULL);
     lv_obj_set_style_pad_hor(sub_legal_info_page, lv_obj_get_style_pad_left(lv_menu_get_main_header(settings_menu), 0), 0);
     section = lv_menu_section_create(sub_legal_info_page);
-    create_text(section, NULL, "Copyright © 2024 M5Stack", LV_MENU_ITEM_BUILDER_VARIANT_1);
-    create_text(section, NULL, "Licensed under MIT License", LV_MENU_ITEM_BUILDER_VARIANT_1);
-    create_text(section, NULL, "LVGL is licensed under MIT License", LV_MENU_ITEM_BUILDER_VARIANT_1);
-    create_text(section, NULL, "ESP-IDF is licensed under Apache 2.0", LV_MENU_ITEM_BUILDER_VARIANT_1);
+    create_text(section, NULL, "此固件作者：ImLunchtime", LV_MENU_ITEM_BUILDER_VARIANT_1);
+    create_text(section, NULL, "此固件使用MIT许可证开源", LV_MENU_ITEM_BUILDER_VARIANT_1);
+    create_text(section, NULL, "LVGL使用MIT许可证开源", LV_MENU_ITEM_BUILDER_VARIANT_1);
+    create_text(section, NULL, "ESP-IDF使用Apache 2.0许可证", LV_MENU_ITEM_BUILDER_VARIANT_1);
     
     // Create About page
     lv_obj_t *sub_about_page = lv_menu_page_create(settings_menu, NULL);
     lv_obj_set_style_pad_hor(sub_about_page, lv_obj_get_style_pad_left(lv_menu_get_main_header(settings_menu), 0), 0);
     lv_menu_separator_create(sub_about_page);
     section = lv_menu_section_create(sub_about_page);
-    cont = create_text(section, NULL, "Software Information", LV_MENU_ITEM_BUILDER_VARIANT_1);
+    cont = create_text(section, NULL, "软件信息", LV_MENU_ITEM_BUILDER_VARIANT_1);
     lv_menu_set_load_page_event(settings_menu, cont, sub_software_info_page);
-    cont = create_text(section, NULL, "Legal Information", LV_MENU_ITEM_BUILDER_VARIANT_1);
+    cont = create_text(section, NULL, "法律信息", LV_MENU_ITEM_BUILDER_VARIANT_1);
     lv_menu_set_load_page_event(settings_menu, cont, sub_legal_info_page);
     
     // Create Menu Mode page
@@ -115,28 +118,28 @@ static void create_settings_menu(lv_obj_t *parent)
     lv_obj_set_style_pad_hor(sub_menu_mode_page, lv_obj_get_style_pad_left(lv_menu_get_main_header(settings_menu), 0), 0);
     lv_menu_separator_create(sub_menu_mode_page);
     section = lv_menu_section_create(sub_menu_mode_page);
-    cont = create_switch(section, LV_SYMBOL_LIST, "Sidebar Enable", true);
+    cont = create_switch(section, LV_SYMBOL_LIST, "启用侧边栏", true);
     lv_obj_add_event_cb(lv_obj_get_child(cont, 2), switch_handler, LV_EVENT_VALUE_CHANGED, settings_menu);
     
     // Create the root page with sidebar
-    root_page = lv_menu_page_create(settings_menu, "Settings");
+    root_page = lv_menu_page_create(settings_menu, "设置");
     lv_obj_set_style_pad_hor(root_page, lv_obj_get_style_pad_left(lv_menu_get_main_header(settings_menu), 0), 0);
     
     // Main settings section
     section = lv_menu_section_create(root_page);
-    cont = create_text(section, LV_SYMBOL_SETTINGS, "Display", LV_MENU_ITEM_BUILDER_VARIANT_1);
+    cont = create_text(section, LV_SYMBOL_SETTINGS, "显示", LV_MENU_ITEM_BUILDER_VARIANT_1);
     lv_menu_set_load_page_event(settings_menu, cont, sub_display_page);
-    cont = create_text(section, LV_SYMBOL_AUDIO, "Sound", LV_MENU_ITEM_BUILDER_VARIANT_1);
+    cont = create_text(section, LV_SYMBOL_AUDIO, "声音", LV_MENU_ITEM_BUILDER_VARIANT_1);
     lv_menu_set_load_page_event(settings_menu, cont, sub_sound_page);
-    cont = create_text(section, LV_SYMBOL_SETTINGS, "System", LV_MENU_ITEM_BUILDER_VARIANT_1);
+    cont = create_text(section, LV_SYMBOL_SETTINGS, "系统", LV_MENU_ITEM_BUILDER_VARIANT_1);
     lv_menu_set_load_page_event(settings_menu, cont, sub_system_page);
     
     // Other settings section
-    create_text(root_page, NULL, "Other", LV_MENU_ITEM_BUILDER_VARIANT_1);
+    create_text(root_page, NULL, "其他", LV_MENU_ITEM_BUILDER_VARIANT_1);
     section = lv_menu_section_create(root_page);
-    cont = create_text(section, LV_SYMBOL_FILE, "About", LV_MENU_ITEM_BUILDER_VARIANT_1);
+    cont = create_text(section, LV_SYMBOL_FILE, "关于", LV_MENU_ITEM_BUILDER_VARIANT_1);
     lv_menu_set_load_page_event(settings_menu, cont, sub_about_page);
-    cont = create_text(section, LV_SYMBOL_SETTINGS, "Menu Mode", LV_MENU_ITEM_BUILDER_VARIANT_1);
+    cont = create_text(section, LV_SYMBOL_SETTINGS, "菜单模式", LV_MENU_ITEM_BUILDER_VARIANT_1);
     lv_menu_set_load_page_event(settings_menu, cont, sub_menu_mode_page);
     
     // Set the sidebar page
@@ -197,6 +200,7 @@ static lv_obj_t *create_text(lv_obj_t *parent, const char *icon, const char *txt
     if(txt) {
         label = lv_label_create(obj);
         lv_label_set_text(label, txt);
+        lv_obj_set_style_text_font(label, &yinpin_hm_20, 0);
         lv_label_set_long_mode(label, LV_LABEL_LONG_SCROLL_CIRCULAR);
         lv_obj_set_flex_grow(label, 1);
     }
@@ -237,6 +241,6 @@ static lv_obj_t *create_switch(lv_obj_t *parent, const char *icon, const char *t
 
 const app_t APP_SETTINGS = {
     .id = "settings",
-    .name = "Settings",
+    .name = "设置",
     .launch = settings_launch
 };

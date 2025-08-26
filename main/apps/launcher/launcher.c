@@ -2,6 +2,10 @@
 #include "managers/window_manager.h"
 #include "managers/app_manager.h"
 #include "lvgl.h"
+#include <string.h>
+
+// Declare the HarmonyOS Sans font
+LV_FONT_DECLARE(yinpin_hm_20);
 
 static void app_btn_event(lv_event_t *e)
 {
@@ -15,7 +19,7 @@ static void app_btn_event(lv_event_t *e)
 void launcher_open(void)
 {
     // The launcher is non-closable
-    wm_window_t *win = wm_open_window("Launcher", false, LV_PCT(45), LV_PCT(50));
+    wm_window_t *win = wm_open_window("启动器", false, LV_PCT(45), LV_PCT(50));
     lv_obj_t *content = wm_get_content(win);
 
     // Main container with column layout
@@ -52,10 +56,20 @@ void launcher_open(void)
         lv_obj_set_style_shadow_width(btn, 0, 0);
         lv_obj_add_event_cb(btn, app_btn_event, LV_EVENT_CLICKED, (void*)app);
 
-        // Centered label
+        // Centered label with Chinese font
         lv_obj_t *lbl = lv_label_create(btn);
-        lv_label_set_text(lbl, app->name ? app->name : "App");
+        // Translate app names to Chinese
+        const char *chinese_name = app->name;
+        if(strcmp(app->name, "Music") == 0) {
+            chinese_name = "音乐";
+        } else if(strcmp(app->name, "Settings") == 0) {
+            chinese_name = "设置";
+        } else if(strcmp(app->name, "File Manager") == 0) {
+            chinese_name = "文件管理";
+        }
+        lv_label_set_text(lbl, chinese_name);
         lv_obj_set_style_text_color(lbl, lv_color_black(), 0);
+        lv_obj_set_style_text_font(lbl, &yinpin_hm_20, 0);
         lv_obj_center(lbl);
     }
 }

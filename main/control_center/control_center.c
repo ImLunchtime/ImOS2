@@ -3,6 +3,9 @@
 #include "lvgl.h"
 #include <stdio.h>
 
+// Declare the HarmonyOS Sans font
+LV_FONT_DECLARE(yinpin_hm_20);
+
 #define BOTTOM_BAR_HEIGHT 60
 
 typedef struct control_center_t {
@@ -77,8 +80,9 @@ static void create_bottom_bar_ui(void)
     
     // Volume icon/label
     g_control_center.volume_label = lv_label_create(volume_container);
-    lv_label_set_text(g_control_center.volume_label, "<)))");
+    lv_label_set_text(g_control_center.volume_label, "音量");
     lv_obj_set_style_text_color(g_control_center.volume_label, lv_color_black(), 0);
+    lv_obj_set_style_text_font(g_control_center.volume_label, &yinpin_hm_20, 0);
     lv_obj_set_style_margin_right(g_control_center.volume_label, 10, 0);
     
     // Volume slider
@@ -107,6 +111,7 @@ static void create_bottom_bar_ui(void)
     g_control_center.value_label = lv_label_create(volume_container);
     lv_label_set_text_fmt(g_control_center.value_label, "%d%%", current_volume);
     lv_obj_set_style_text_color(g_control_center.value_label, lv_color_black(), 0);
+    lv_obj_set_style_text_font(g_control_center.value_label, &yinpin_hm_20, 0);
     lv_obj_set_style_margin_left(g_control_center.value_label, 10, 0);
     lv_obj_set_width(g_control_center.value_label, 40); // Fixed width for consistent layout
     
