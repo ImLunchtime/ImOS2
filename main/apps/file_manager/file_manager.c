@@ -30,23 +30,21 @@ static void show_file_info(const char *filepath);
 
 static void file_manager_launch(void)
 {
-    // Initialize SD card if not already done
-    if (!hal_sdcard_is_mounted()) {
-        if (!hal_sdcard_init()) {
-            // Show error dialog if SD card initialization fails
-            // For now, we'll still open the window but show an error
-        }
+    // Initialize current path
+    strcpy(fm_state.current_path, "/sdcard");
+    
+    // Open window with Chinese title
+    fm_state.window = wm_open_window("文件管理器", true, LV_PCT(80), LV_PCT(80));
+    if (!fm_state.window) {
+        printf("Failed to create file manager window\n");
+        return;
     }
     
-    // Open window for file manager
-    fm_state.window = wm_open_window("File Manager", true, LV_PCT(80), LV_PCT(80));
+    // Get window content area
     lv_obj_t *content = wm_get_content(fm_state.window);
-    
-    // Set initial path to SD card mount point or root
-    if (hal_sdcard_is_mounted()) {
-        strcpy(fm_state.current_path, hal_sdcard_get_mount_point());
-    } else {
-        strcpy(fm_state.current_path, "/");
+    if (!content) {
+        printf("Failed to get window content\n");
+        return;
     }
     
     // Create the file manager UI
@@ -126,7 +124,7 @@ static void create_file_manager_ui(lv_obj_t *parent)
     
     // Status label at bottom
     fm_state.status_label = lv_label_create(parent);
-    lv_label_set_text(fm_state.status_label, "Ready");
+    lv_label_set_text(fm_state.status_label, "就绪");
     
     // Apply theme label styling
     theme_apply_label_style(fm_state.status_label);
@@ -203,7 +201,7 @@ static void refresh_file_list(void)
     
     // Update status
     char status_text[100];
-    snprintf(status_text, sizeof(status_text), "%d directories, %d files", dir_count, file_count);
+    snprintf(status_text, sizeof(status_text), "共%d个目录, %d个文件", dir_count, file_count);
     lv_label_set_text(fm_state.status_label, status_text);
 }
 
@@ -279,15 +277,15 @@ static void show_file_info(const char *filepath)
 {
     struct stat st;
     if (stat(filepath, &st) != 0) {
-        lv_label_set_text(fm_state.status_label, "Cannot get file info");
+        lv_label_set_text(fm_state.status_label, "无法获取文件信息");
         return;
     }
     
     // Create a simple message box with file info
     lv_obj_t *mbox = lv_msgbox_create(NULL);
-    lv_msgbox_add_title(mbox, "File Information");
+    lv_msgbox_add_title(mbox, "文件信息");
     
-    char info_text[600];  // Increased buffer size from 300 to 600
+    char info_text[600];
     const char *filename = strrchr(filepath, '/');
     filename = filename ? filename + 1 : filepath;
     
@@ -300,16 +298,50 @@ static void show_file_info(const char *filepath)
     }
     
     snprintf(info_text, sizeof(info_text), 
-        "Name: %s\n"
-        "Size: %ld bytes\n"
-        "Type: %s",
+        "名称: %s\n"
+        "大小: %ld 字节\n"
+        "类型: %s",
         display_name,
         st.st_size,
-        S_ISDIR(st.st_mode) ? "Directory" : "File"
+        S_ISDIR(st.st_mode) ? "文件夹" : "文件"
     );
     
     lv_msgbox_add_text(mbox, info_text);
+    
+    // Apply theme styling to the message box title
+    lv_obj_t *title = lv_msgbox_get_title(mbox);
+    if (title) {
+        theme_apply_label_style(title);
+    }
+    
+    // Apply theme styling to the message box content
+    lv_obj_t *content = lv_msgbox_get_content(mbox);
+    if (content) {
+        // Find and style the text label within the content
+        uint32_t child_count = lv_obj_get_child_count(content);
+        for (uint32_t i = 0; i < child_count; i++) {
+            lv_obj_t *child = lv_obj_get_child(content, i);
+            if (lv_obj_check_type(child, &lv_label_class)) {
+                theme_apply_label_style(child);
+            }
+        }
+    }
+    
     lv_msgbox_add_close_button(mbox);
+    
+    // Apply theme styling to buttons in the message box
+    lv_obj_t *footer = lv_msgbox_get_footer(mbox);
+    if (footer) {
+        uint32_t child_count = lv_obj_get_child_count(footer);
+        for (uint32_t i = 0; i < child_count; i++) {
+            lv_obj_t *child = lv_obj_get_child(footer, i);
+            if (lv_obj_check_type(child, &lv_button_class)) {
+                theme_apply_button_style(child);
+                // Override size for close button
+                lv_obj_set_size(child, 80, 40);
+            }
+        }
+    }
     
     // Center the message box
     lv_obj_center(mbox);
@@ -318,6 +350,6 @@ static void show_file_info(const char *filepath)
 // App definition
 const app_t APP_FILE_MANAGER = {
     .id = "file_manager",
-    .name = "File Manager",
+    .name = "文件管理器",
     .launch = file_manager_launch
 };
