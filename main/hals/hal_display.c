@@ -14,9 +14,12 @@ void hal_display_init(void)
 
 void hal_display_set_brightness(uint8_t brightness)
 {
-    // Clamp brightness to valid range (0-100) using C-style clamping
+    // Clamp brightness to valid range (20-100) with minimum 20%
     if (brightness > 100) {
         brightness = 100;
+    }
+    if (brightness < 20) {
+        brightness = 20;
     }
     
     current_brightness = brightness;

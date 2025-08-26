@@ -34,7 +34,7 @@ static void file_manager_launch(void)
     strcpy(fm_state.current_path, "/sdcard");
     
     // Open window with Chinese title
-    fm_state.window = wm_open_window("文件管理器", true, LV_PCT(80), LV_PCT(80));
+    fm_state.window = wm_open_window("文件管理器", true, LV_PCT(60), LV_PCT(70));
     if (!fm_state.window) {
         printf("Failed to create file manager window\n");
         return;

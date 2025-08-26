@@ -385,7 +385,7 @@ static void create_music_ui(lv_obj_t* parent) {
 static void music_launch(void) {
     // Create window with red background color #F05C5E
     lv_color_t red_bg = lv_color_hex(0xF5F5F5);
-    g_music_data.window = wm_open_window_with_color("音乐播放器", true, LV_PCT(70), LV_PCT(60), red_bg);
+    g_music_data.window = wm_open_window_with_color("音乐播放器", true, LV_PCT(60), LV_PCT(60), red_bg);
     lv_obj_t* content = wm_get_content(g_music_data.window);
     
     // Create UI

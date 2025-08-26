@@ -116,7 +116,7 @@ static void create_floating_bar_ui(void)
     lv_obj_set_style_text_color(g_control_center.volume_label, lv_color_black(), 0);
     lv_obj_set_style_text_font(g_control_center.volume_label, &yinpin_hm_light_20, 0);
     lv_obj_set_style_margin_right(g_control_center.volume_label, 8, 0);
-    lv_obj_set_width(g_control_center.volume_label, 40);
+    lv_obj_set_width(g_control_center.volume_label, 45);
     lv_label_set_long_mode(g_control_center.volume_label, LV_LABEL_LONG_CLIP);
     
     // Volume slider
@@ -146,7 +146,7 @@ static void create_floating_bar_ui(void)
     lv_obj_set_style_text_font(g_control_center.volume_value_label, &yinpin_hm_light_20, 0);
     lv_obj_set_style_margin_left(g_control_center.volume_value_label, 8, 0);
     lv_obj_set_style_margin_right(g_control_center.volume_value_label, 15, 0); // Space between controls
-    lv_obj_set_width(g_control_center.volume_value_label, 35);
+    lv_obj_set_width(g_control_center.volume_value_label, 60);
     lv_label_set_long_mode(g_control_center.volume_value_label, LV_LABEL_LONG_CLIP);
     
     // Update volume value label when slider changes
@@ -159,14 +159,14 @@ static void create_floating_bar_ui(void)
     lv_obj_set_style_text_color(g_control_center.brightness_label, lv_color_black(), 0);
     lv_obj_set_style_text_font(g_control_center.brightness_label, &yinpin_hm_light_20, 0);
     lv_obj_set_style_margin_right(g_control_center.brightness_label, 8, 0);
-    lv_obj_set_width(g_control_center.brightness_label, 40);
+    lv_obj_set_width(g_control_center.brightness_label, 45);
     lv_label_set_long_mode(g_control_center.brightness_label, LV_LABEL_LONG_CLIP);
     
     // Brightness slider
     g_control_center.brightness_slider = lv_slider_create(controls_container);
     lv_obj_set_width(g_control_center.brightness_slider, 120); // Same width as volume slider
     lv_obj_set_height(g_control_center.brightness_slider, 16);
-    lv_slider_set_range(g_control_center.brightness_slider, 0, 100);
+    lv_slider_set_range(g_control_center.brightness_slider, 20, 100);
     
     // Set initial value from current display brightness
     uint8_t current_brightness = hal_display_get_brightness();
@@ -188,7 +188,7 @@ static void create_floating_bar_ui(void)
     lv_obj_set_style_text_color(g_control_center.brightness_value_label, lv_color_black(), 0);
     lv_obj_set_style_text_font(g_control_center.brightness_value_label, &yinpin_hm_light_20, 0);
     lv_obj_set_style_margin_left(g_control_center.brightness_value_label, 8, 0);
-    lv_obj_set_width(g_control_center.brightness_value_label, 35);
+    lv_obj_set_width(g_control_center.brightness_value_label, 60);
     lv_label_set_long_mode(g_control_center.brightness_value_label, LV_LABEL_LONG_CLIP);
     
     // Update brightness value label when slider changes
