@@ -1,6 +1,7 @@
 #include "apps/file_manager/file_manager.h"
 #include "managers/window_manager.h"
 #include "hals/hal_sdcard.h"
+#include "theme/theme_engine.h"
 #include "lvgl.h"
 #include <stdio.h>
 #include <string.h>
@@ -73,27 +74,45 @@ static void create_file_manager_ui(lv_obj_t *parent)
     // Back button
     lv_obj_t *back_btn = lv_btn_create(toolbar);
     lv_obj_set_size(back_btn, 60, 40);
+    
+    // Apply theme button styling
+    theme_apply_button_style(back_btn);
+    // Override size since theme sets 110x55
+    lv_obj_set_size(back_btn, 60, 40);
+    
     lv_obj_add_event_cb(back_btn, back_btn_event_cb, LV_EVENT_CLICKED, NULL);
     
     lv_obj_t *back_label = lv_label_create(back_btn);
     lv_label_set_text(back_label, LV_SYMBOL_LEFT);
-    lv_obj_center(back_label);
+    theme_apply_button_icon_style(back_label);
     
     // Refresh button
     lv_obj_t *refresh_btn = lv_btn_create(toolbar);
     lv_obj_set_size(refresh_btn, 60, 40);
+    
+    // Apply theme button styling
+    theme_apply_button_style(refresh_btn);
+    // Override size since theme sets 110x55
+    lv_obj_set_size(refresh_btn, 60, 40);
+    
     lv_obj_add_event_cb(refresh_btn, refresh_btn_event_cb, LV_EVENT_CLICKED, NULL);
     
     lv_obj_t *refresh_label = lv_label_create(refresh_btn);
     lv_label_set_text(refresh_label, LV_SYMBOL_REFRESH);
+    theme_apply_button_icon_style(refresh_label);
     lv_obj_center(refresh_label);
     
     // Path label (flexible width)
     fm_state.path_label = lv_label_create(toolbar);
     lv_label_set_text(fm_state.path_label, fm_state.current_path);
+    
+    // Apply theme label styling
+    theme_apply_label_style(fm_state.path_label);
+    // Override text alignment for path display
+    lv_obj_set_style_text_align(fm_state.path_label, LV_TEXT_ALIGN_LEFT, 0);
+    
     lv_obj_set_flex_grow(fm_state.path_label, 1);
     lv_label_set_long_mode(fm_state.path_label, LV_LABEL_LONG_SCROLL_CIRCULAR);
-    lv_obj_set_style_text_align(fm_state.path_label, LV_TEXT_ALIGN_LEFT, 0);
     
     // File list container
     lv_obj_t *list_container = lv_obj_create(parent);
@@ -108,8 +127,11 @@ static void create_file_manager_ui(lv_obj_t *parent)
     // Status label at bottom
     fm_state.status_label = lv_label_create(parent);
     lv_label_set_text(fm_state.status_label, "Ready");
+    
+    // Apply theme label styling
+    theme_apply_label_style(fm_state.status_label);
+    
     lv_obj_set_width(fm_state.status_label, LV_PCT(100));
-    lv_obj_set_style_text_align(fm_state.status_label, LV_TEXT_ALIGN_CENTER, 0);
 }
 
 static void refresh_file_list(void)

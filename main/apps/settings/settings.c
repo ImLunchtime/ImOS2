@@ -1,5 +1,6 @@
 #include "apps/settings/settings.h"
 #include "managers/window_manager.h"
+#include "theme/theme_engine.h"
 #include "lvgl.h"
 
 // Declare the HarmonyOS Sans font
@@ -200,7 +201,10 @@ static lv_obj_t *create_text(lv_obj_t *parent, const char *icon, const char *txt
     if(txt) {
         label = lv_label_create(obj);
         lv_label_set_text(label, txt);
-        lv_obj_set_style_text_font(label, &yinpin_hm_light_20, 0);
+        
+        // Apply theme label styling instead of manual font setting
+        theme_apply_label_style(label);
+        
         lv_label_set_long_mode(label, LV_LABEL_LONG_SCROLL_CIRCULAR);
         lv_obj_set_flex_grow(label, 1);
     }

@@ -1,11 +1,9 @@
 #include "apps/launcher/launcher.h"
 #include "managers/window_manager.h"
 #include "managers/app_manager.h"
+#include "theme/theme_engine.h"
 #include "lvgl.h"
 #include <string.h>
-
-// Declare the HarmonyOS Sans font
-LV_FONT_DECLARE(yinpin_hm_light_20);
 
 static void app_btn_event(lv_event_t *e)
 {
@@ -47,13 +45,10 @@ void launcher_open(void)
         const app_t *app = apps[i];
         // Create button for app
         lv_obj_t *btn = lv_btn_create(apps_container);
-        lv_obj_set_size(btn, 110, 55);               /* 2:1 pill ratio */
-        /* Liquid-Glass button style */
-        lv_obj_set_style_radius(btn, LV_RADIUS_CIRCLE, 0);
-        lv_obj_set_style_bg_color(btn, lv_color_white(), 0);
-        lv_obj_set_style_bg_opa(btn, LV_OPA_COVER, 0);
-        lv_obj_set_style_border_width(btn, 0, 0);
-        lv_obj_set_style_shadow_width(btn, 0, 0);
+        
+        // Apply theme styling instead of manual styling
+        theme_apply_button_style(btn);
+        
         lv_obj_add_event_cb(btn, app_btn_event, LV_EVENT_CLICKED, (void*)app);
 
         // Centered label with Chinese font
@@ -68,8 +63,10 @@ void launcher_open(void)
             chinese_name = "文件管理";
         }
         lv_label_set_text(lbl, chinese_name);
-        lv_obj_set_style_text_color(lbl, lv_color_black(), 0);
-        lv_obj_set_style_text_font(lbl, &yinpin_hm_light_20, 0);
+        
+        // Apply theme label styling
+        theme_apply_label_style(lbl);
+        
         lv_obj_center(lbl);
     }
 }

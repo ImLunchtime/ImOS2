@@ -2,15 +2,13 @@
 #include "managers/window_manager.h"
 #include "hals/hal_audio.h"
 #include "hals/hal_sdcard.h"
+#include "theme/theme_engine.h"
 #include "lvgl.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
 #include <sys/stat.h>
-
-// Declare the HarmonyOS Sans font
-LV_FONT_DECLARE(yinpin_hm_light_20);
 
 // Global music player data
 static music_player_data_t g_music_data = {
@@ -320,7 +318,10 @@ static void create_music_ui(lv_obj_t* parent) {
     g_current_song_label = lv_label_create(parent);
     lv_label_set_text(g_current_song_label, "未选择歌曲");
     lv_obj_set_style_text_align(g_current_song_label, LV_TEXT_ALIGN_CENTER, 0);
-    lv_obj_set_style_text_font(g_current_song_label, &yinpin_hm_light_20, 0);
+    
+    // Apply theme label styling
+    theme_apply_label_style(g_current_song_label);
+    
     lv_obj_set_width(g_current_song_label, LV_PCT(100));
     lv_label_set_long_mode(g_current_song_label, LV_LABEL_LONG_SCROLL_CIRCULAR);
     
@@ -338,44 +339,41 @@ static void create_music_ui(lv_obj_t* parent) {
     // Previous button
     g_prev_btn = lv_btn_create(btn_container);
     lv_obj_set_size(g_prev_btn, 50, 50);
-    // Add white translucent background and opaque white border
-    lv_obj_set_style_bg_color(g_prev_btn, lv_color_hex(0xF05C5E), 0);
-    lv_obj_set_style_bg_opa(g_prev_btn, LV_OPA_50, 0);  // 50% opacity background
-    lv_obj_set_style_border_color(g_prev_btn, lv_color_white(), 0);
-    lv_obj_set_style_border_width(g_prev_btn, 2, 0);
-    lv_obj_set_style_border_opa(g_prev_btn, LV_OPA_100, 0);  // Opaque border
+    
+    // Apply theme styling instead of custom styling
+    theme_apply_button_style(g_prev_btn);
+    lv_obj_set_size(g_prev_btn, 50, 50); // Override size
+    
     lv_obj_add_event_cb(g_prev_btn, prev_event_cb, LV_EVENT_CLICKED, NULL);
     lv_obj_t* prev_label = lv_label_create(g_prev_btn);
     lv_label_set_text(prev_label, LV_SYMBOL_PREV);
-    lv_obj_center(prev_label);
+    theme_apply_button_icon_style(prev_label);
     
     // Play/Pause button
     g_play_pause_btn = lv_btn_create(btn_container);
     lv_obj_set_size(g_play_pause_btn, 60, 60);
-    // Add white translucent background and opaque white border
-    lv_obj_set_style_bg_color(g_play_pause_btn, lv_color_hex(0xF05C5E), 0);
-    lv_obj_set_style_bg_opa(g_play_pause_btn, LV_OPA_50, 0);  // 50% opacity background
-    lv_obj_set_style_border_color(g_play_pause_btn, lv_color_white(), 0);
-    lv_obj_set_style_border_width(g_play_pause_btn, 2, 0);
-    lv_obj_set_style_border_opa(g_play_pause_btn, LV_OPA_100, 0);  // Opaque border
+    
+    // Apply theme styling instead of custom styling
+    theme_apply_button_style(g_play_pause_btn);
+    lv_obj_set_size(g_play_pause_btn, 60, 60); // Override size
+    
     lv_obj_add_event_cb(g_play_pause_btn, play_pause_event_cb, LV_EVENT_CLICKED, NULL);
     lv_obj_t* play_label = lv_label_create(g_play_pause_btn);
     lv_label_set_text(play_label, LV_SYMBOL_PLAY);
-    lv_obj_center(play_label);
+    theme_apply_button_icon_style(play_label);
     
     // Next button
     g_next_btn = lv_btn_create(btn_container);
     lv_obj_set_size(g_next_btn, 50, 50);
-    // Add white translucent background and opaque white border
-    lv_obj_set_style_bg_color(g_next_btn, lv_color_hex(0xF05C5E), 0);
-    lv_obj_set_style_bg_opa(g_next_btn, LV_OPA_50, 0);  // 50% opacity background
-    lv_obj_set_style_border_color(g_next_btn, lv_color_white(), 0);
-    lv_obj_set_style_border_width(g_next_btn, 2, 0);
-    lv_obj_set_style_border_opa(g_next_btn, LV_OPA_100, 0);  // Opaque border
+    
+    // Apply theme styling instead of custom styling
+    theme_apply_button_style(g_next_btn);
+    lv_obj_set_size(g_next_btn, 50, 50); // Override size
+    
     lv_obj_add_event_cb(g_next_btn, next_event_cb, LV_EVENT_CLICKED, NULL);
     lv_obj_t* next_label = lv_label_create(g_next_btn);
     lv_label_set_text(next_label, LV_SYMBOL_NEXT);
-    lv_obj_center(next_label);
+    theme_apply_button_icon_style(next_label);
     
     // File list
     g_file_list = lv_list_create(parent);
