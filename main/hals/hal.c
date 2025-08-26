@@ -71,7 +71,9 @@ void hal_init(void)
     
     lvDisp = bsp_display_start_with_config(&display_cfg);
     lv_display_set_rotation(lvDisp, LV_DISPLAY_ROTATION_90);
-    bsp_display_backlight_on();
+    
+    // Initialize display HAL (this will turn on backlight and set initial brightness)
+    hal_display_init();
 }
 
 void hal_touchpad_init(void)

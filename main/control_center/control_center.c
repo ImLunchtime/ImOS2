@@ -1,5 +1,6 @@
 #include "control_center.h"
 #include "hals/hal_audio.h"
+#include "hals/hal_display.h"
 #include "lvgl.h"
 #include <stdio.h>
 
@@ -7,14 +8,17 @@
 LV_FONT_DECLARE(yinpin_hm_light_20);
 
 #define FLOATING_BAR_HEIGHT 50
-#define FLOATING_BAR_WIDTH 350  // Increased from 280 to fit controls better
+#define FLOATING_BAR_WIDTH 600  // Increased from 500 to 600 to fit larger labels
 #define FLOATING_BAR_MARGIN 20
 
 typedef struct control_center_t {
     lv_obj_t *floating_bar;
     lv_obj_t *volume_slider;
     lv_obj_t *volume_label;
-    lv_obj_t *value_label;
+    lv_obj_t *volume_value_label;
+    lv_obj_t *brightness_slider;
+    lv_obj_t *brightness_label;
+    lv_obj_t *brightness_value_label;
     bool is_initialized;
 } control_center_t;
 
@@ -29,6 +33,23 @@ static void volume_slider_event(lv_event_t *e)
 }
 
 static void volume_label_update_event(lv_event_t *e)
+{
+    if(lv_event_get_code(e) != LV_EVENT_VALUE_CHANGED) return;
+    lv_obj_t *slider = lv_event_get_target(e);
+    lv_obj_t *label = (lv_obj_t*)lv_event_get_user_data(e);
+    int32_t value = lv_slider_get_value(slider);
+    lv_label_set_text_fmt(label, "%d%%", (int)value);
+}
+
+static void brightness_slider_event(lv_event_t *e)
+{
+    if(lv_event_get_code(e) != LV_EVENT_VALUE_CHANGED) return;
+    lv_obj_t *slider = lv_event_get_target(e);
+    int32_t value = lv_slider_get_value(slider);
+    hal_display_set_brightness((uint8_t)value);
+}
+
+static void brightness_label_update_event(lv_event_t *e)
 {
     if(lv_event_get_code(e) != LV_EVENT_VALUE_CHANGED) return;
     lv_obj_t *slider = lv_event_get_target(e);
@@ -75,31 +96,32 @@ static void create_floating_bar_ui(void)
     // Keep the bar always on top
     lv_obj_move_foreground(g_control_center.floating_bar);
     
-    // Create horizontal container for volume controls
-    lv_obj_t *volume_container = lv_obj_create(g_control_center.floating_bar);
-    lv_obj_set_size(volume_container, LV_PCT(100), LV_PCT(100));
-    lv_obj_set_style_bg_opa(volume_container, LV_OPA_TRANSP, 0);
-    lv_obj_set_style_border_width(volume_container, 0, 0);
-    lv_obj_set_style_pad_all(volume_container, 0, 0);
-    lv_obj_set_flex_flow(volume_container, LV_FLEX_FLOW_ROW);
-    lv_obj_set_flex_align(volume_container, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
+    // Create horizontal container for all controls
+    lv_obj_t *controls_container = lv_obj_create(g_control_center.floating_bar);
+    lv_obj_set_size(controls_container, LV_PCT(100), LV_PCT(100));
+    lv_obj_set_style_bg_opa(controls_container, LV_OPA_TRANSP, 0);
+    lv_obj_set_style_border_width(controls_container, 0, 0);
+    lv_obj_set_style_pad_all(controls_container, 0, 0);
+    lv_obj_set_flex_flow(controls_container, LV_FLEX_FLOW_ROW);
+    lv_obj_set_flex_align(controls_container, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
     
     // Disable scrolling in the container as well
-    lv_obj_clear_flag(volume_container, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_add_flag(volume_container, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_clear_flag(controls_container, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_add_flag(controls_container, LV_OBJ_FLAG_CLICKABLE);
     
-    // Volume icon/label with wider container to prevent line breaks
-    g_control_center.volume_label = lv_label_create(volume_container);
+    // === VOLUME CONTROLS ===
+    // Volume icon/label
+    g_control_center.volume_label = lv_label_create(controls_container);
     lv_label_set_text(g_control_center.volume_label, "音量");
     lv_obj_set_style_text_color(g_control_center.volume_label, lv_color_black(), 0);
     lv_obj_set_style_text_font(g_control_center.volume_label, &yinpin_hm_light_20, 0);
-    lv_obj_set_style_margin_right(g_control_center.volume_label, 12, 0); // Increased margin
-    lv_obj_set_width(g_control_center.volume_label, 50); // Increased width to prevent line breaks
-    lv_label_set_long_mode(g_control_center.volume_label, LV_LABEL_LONG_CLIP); // Prevent wrapping
+    lv_obj_set_style_margin_right(g_control_center.volume_label, 8, 0);
+    lv_obj_set_width(g_control_center.volume_label, 40);
+    lv_label_set_long_mode(g_control_center.volume_label, LV_LABEL_LONG_CLIP);
     
-    // Volume slider with increased width for better usability
-    g_control_center.volume_slider = lv_slider_create(volume_container);
-    lv_obj_set_width(g_control_center.volume_slider, 180); // Increased from 140 for better control
+    // Volume slider
+    g_control_center.volume_slider = lv_slider_create(controls_container);
+    lv_obj_set_width(g_control_center.volume_slider, 120); // Reduced to fit both sliders
     lv_obj_set_height(g_control_center.volume_slider, 16);
     lv_slider_set_range(g_control_center.volume_slider, 0, 100);
     
@@ -107,29 +129,70 @@ static void create_floating_bar_ui(void)
     uint8_t current_volume = hal_get_speaker_volume();
     lv_slider_set_value(g_control_center.volume_slider, current_volume, LV_ANIM_OFF);
     
-    // Style the slider with rounded appearance
+    // Style the volume slider
     lv_obj_set_style_bg_color(g_control_center.volume_slider, lv_color_hex(0x404040), LV_PART_MAIN);
     lv_obj_set_style_bg_color(g_control_center.volume_slider, lv_color_hex(0x00A8FF), LV_PART_INDICATOR);
     lv_obj_set_style_bg_color(g_control_center.volume_slider, lv_color_white(), LV_PART_KNOB);
     lv_obj_set_style_radius(g_control_center.volume_slider, LV_RADIUS_CIRCLE, 0);
     
-    // Ensure slider is clickable and can be dragged
+    // Add volume slider events
     lv_obj_add_flag(g_control_center.volume_slider, LV_OBJ_FLAG_CLICKABLE);
-    
-    // Add event callback for real-time volume control
     lv_obj_add_event_cb(g_control_center.volume_slider, volume_slider_event, LV_EVENT_VALUE_CHANGED, NULL);
     
-    // Volume value label with wider container
-    g_control_center.value_label = lv_label_create(volume_container);
-    lv_label_set_text_fmt(g_control_center.value_label, "%d%%", current_volume);
-    lv_obj_set_style_text_color(g_control_center.value_label, lv_color_black(), 0);
-    lv_obj_set_style_text_font(g_control_center.value_label, &yinpin_hm_light_20, 0);
-    lv_obj_set_style_margin_left(g_control_center.value_label, 12, 0); // Increased margin
-    lv_obj_set_width(g_control_center.value_label, 45); // Increased width for better layout
-    lv_label_set_long_mode(g_control_center.value_label, LV_LABEL_LONG_CLIP); // Prevent wrapping
+    // Volume value label
+    g_control_center.volume_value_label = lv_label_create(controls_container);
+    lv_label_set_text_fmt(g_control_center.volume_value_label, "%d%%", current_volume);
+    lv_obj_set_style_text_color(g_control_center.volume_value_label, lv_color_black(), 0);
+    lv_obj_set_style_text_font(g_control_center.volume_value_label, &yinpin_hm_light_20, 0);
+    lv_obj_set_style_margin_left(g_control_center.volume_value_label, 8, 0);
+    lv_obj_set_style_margin_right(g_control_center.volume_value_label, 15, 0); // Space between controls
+    lv_obj_set_width(g_control_center.volume_value_label, 35);
+    lv_label_set_long_mode(g_control_center.volume_value_label, LV_LABEL_LONG_CLIP);
     
-    // Update value label when slider changes
-    lv_obj_add_event_cb(g_control_center.volume_slider, volume_label_update_event, LV_EVENT_VALUE_CHANGED, g_control_center.value_label);
+    // Update volume value label when slider changes
+    lv_obj_add_event_cb(g_control_center.volume_slider, volume_label_update_event, LV_EVENT_VALUE_CHANGED, g_control_center.volume_value_label);
+    
+    // === BRIGHTNESS CONTROLS ===
+    // Brightness icon/label
+    g_control_center.brightness_label = lv_label_create(controls_container);
+    lv_label_set_text(g_control_center.brightness_label, "亮度");
+    lv_obj_set_style_text_color(g_control_center.brightness_label, lv_color_black(), 0);
+    lv_obj_set_style_text_font(g_control_center.brightness_label, &yinpin_hm_light_20, 0);
+    lv_obj_set_style_margin_right(g_control_center.brightness_label, 8, 0);
+    lv_obj_set_width(g_control_center.brightness_label, 40);
+    lv_label_set_long_mode(g_control_center.brightness_label, LV_LABEL_LONG_CLIP);
+    
+    // Brightness slider
+    g_control_center.brightness_slider = lv_slider_create(controls_container);
+    lv_obj_set_width(g_control_center.brightness_slider, 120); // Same width as volume slider
+    lv_obj_set_height(g_control_center.brightness_slider, 16);
+    lv_slider_set_range(g_control_center.brightness_slider, 0, 100);
+    
+    // Set initial value from current display brightness
+    uint8_t current_brightness = hal_display_get_brightness();
+    lv_slider_set_value(g_control_center.brightness_slider, current_brightness, LV_ANIM_OFF);
+    
+    // Style the brightness slider with different color
+    lv_obj_set_style_bg_color(g_control_center.brightness_slider, lv_color_hex(0x404040), LV_PART_MAIN);
+    lv_obj_set_style_bg_color(g_control_center.brightness_slider, lv_color_hex(0xFFB000), LV_PART_INDICATOR); // Orange for brightness
+    lv_obj_set_style_bg_color(g_control_center.brightness_slider, lv_color_white(), LV_PART_KNOB);
+    lv_obj_set_style_radius(g_control_center.brightness_slider, LV_RADIUS_CIRCLE, 0);
+    
+    // Add brightness slider events
+    lv_obj_add_flag(g_control_center.brightness_slider, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_add_event_cb(g_control_center.brightness_slider, brightness_slider_event, LV_EVENT_VALUE_CHANGED, NULL);
+    
+    // Brightness value label
+    g_control_center.brightness_value_label = lv_label_create(controls_container);
+    lv_label_set_text_fmt(g_control_center.brightness_value_label, "%d%%", current_brightness);
+    lv_obj_set_style_text_color(g_control_center.brightness_value_label, lv_color_black(), 0);
+    lv_obj_set_style_text_font(g_control_center.brightness_value_label, &yinpin_hm_light_20, 0);
+    lv_obj_set_style_margin_left(g_control_center.brightness_value_label, 8, 0);
+    lv_obj_set_width(g_control_center.brightness_value_label, 35);
+    lv_label_set_long_mode(g_control_center.brightness_value_label, LV_LABEL_LONG_CLIP);
+    
+    // Update brightness value label when slider changes
+    lv_obj_add_event_cb(g_control_center.brightness_slider, brightness_label_update_event, LV_EVENT_VALUE_CHANGED, g_control_center.brightness_value_label);
     
     printf("Floating control bar created at bottom center with size (%d x %d)\n", 
            FLOATING_BAR_WIDTH, FLOATING_BAR_HEIGHT);
@@ -180,7 +243,10 @@ void control_center_deinit(void)
         g_control_center.floating_bar = NULL;
         g_control_center.volume_slider = NULL;
         g_control_center.volume_label = NULL;
-        g_control_center.value_label = NULL;
+        g_control_center.volume_value_label = NULL;
+        g_control_center.brightness_slider = NULL;
+        g_control_center.brightness_label = NULL;
+        g_control_center.brightness_value_label = NULL;
     }
     
     g_control_center.is_initialized = false;
