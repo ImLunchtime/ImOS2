@@ -21,3 +21,4 @@ dependencies:
   espressif/esp_lcd_ili9881c: '*'
   chmorgan/esp-audio-player: 1.0.7
   chmorgan/esp-file-iterator: 1.0.0
+  espressif/usb_host_hid: ^1.0.0

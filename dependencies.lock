@@ -154,6 +154,6 @@ direct_dependencies:
 - espressif/esp_lvgl_port
 - espressif/usb_host_hid
 - idf
-manifest_hash: 7ba8a194fad8a7675031f49ab7f8c9eff7ead8c981fb62fa1b7d8fe05a8dca81
+manifest_hash: 27a9870fd1588dfdcab243ca3b6138e04d6c850503dbe7c8e4947636555294eb
 target: esp32p4
 version: 2.0.0

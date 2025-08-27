@@ -3,6 +3,7 @@
 
 lv_disp_t *lvDisp = NULL;
 lv_indev_t *lvTouchpad = NULL;
+lv_indev_t *lvUsbMouse = NULL;
 
 extern esp_lcd_touch_handle_t _lcd_touch_handle;
 
@@ -74,6 +75,9 @@ void hal_init(void)
     
     // Initialize display HAL (this will turn on backlight and set initial brightness)
     hal_display_init();
+    
+    // Initialize USB HAL
+    hal_usb_init();
 }
 
 void hal_touchpad_init(void)
@@ -83,4 +87,7 @@ void hal_touchpad_init(void)
     lv_indev_set_type(lvTouchpad, LV_INDEV_TYPE_POINTER);
     lv_indev_set_read_cb(lvTouchpad, lvgl_read_cb);
     lv_indev_set_display(lvTouchpad, lvDisp);
+    
+    // Initialize USB mouse input
+    hal_usb_mouse_init();
 }
