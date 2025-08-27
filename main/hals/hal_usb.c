@@ -120,6 +120,9 @@ void hal_usb_mouse_init(void)
     lv_obj_add_flag(cursor_obj, LV_OBJ_FLAG_IGNORE_LAYOUT);
     lv_obj_add_flag(cursor_obj, LV_OBJ_FLAG_FLOATING);
     
+    // Hide cursor initially (no device connected)
+    lv_obj_add_flag(cursor_obj, LV_OBJ_FLAG_HIDDEN);
+    
     // Set cursor for the input device
     lv_indev_set_cursor(lvUsbMouse, cursor_obj);
     
@@ -181,6 +184,19 @@ void hid_host_device_event(hid_host_device_handle_t hid_device_handle, const hid
                 err = hid_host_device_start(hid_device_handle);
                 if (err != ESP_OK) {
                     ESP_LOGE(TAG, "Failed to start HID device: %s", esp_err_to_name(err));
+                } else {
+                    // Mark device as connected and show cursor
+                    if (xSemaphoreTake(g_usb_mouse_data.mutex, pdMS_TO_TICKS(100)) == pdTRUE) {
+                        g_usb_mouse_data.device_connected = true;
+                        xSemaphoreGive(g_usb_mouse_data.mutex);
+                    }
+                    
+                    // Show cursor
+                    lv_obj_t *cursor_obj = lv_indev_get_cursor(lvUsbMouse);
+                    if (cursor_obj) {
+                        lv_obj_remove_flag(cursor_obj, LV_OBJ_FLAG_HIDDEN);
+                    }
+                    ESP_LOGI(TAG, "USB mouse cursor shown");
                 }
             }
             break;
@@ -216,7 +232,7 @@ void hid_host_interface_callback(hid_host_device_handle_t hid_device_handle, con
                 ESP_LOGE(TAG, "Failed to close HID device: %s", esp_err_to_name(err));
             }
             
-            // Reset mouse data safely
+            // Reset mouse data safely and hide cursor
             if (xSemaphoreTake(g_usb_mouse_data.mutex, pdMS_TO_TICKS(100)) == pdTRUE) {
                 g_usb_mouse_data.x = lv_display_get_horizontal_resolution(NULL) / 2;
                 g_usb_mouse_data.y = lv_display_get_vertical_resolution(NULL) / 2;
@@ -224,8 +240,16 @@ void hid_host_interface_callback(hid_host_device_handle_t hid_device_handle, con
                 g_usb_mouse_data.right_button = false;
                 g_usb_mouse_data.middle_button = false;
                 g_usb_mouse_data.wheel = 0;
+                g_usb_mouse_data.device_connected = false;  // Mark as disconnected
                 xSemaphoreGive(g_usb_mouse_data.mutex);
             }
+            
+            // Hide cursor
+            lv_obj_t *cursor_obj = lv_indev_get_cursor(lvUsbMouse);
+            if (cursor_obj) {
+                lv_obj_add_flag(cursor_obj, LV_OBJ_FLAG_HIDDEN);
+            }
+            ESP_LOGI(TAG, "USB mouse cursor hidden");
             break;
             
         case HID_HOST_INTERFACE_EVENT_TRANSFER_ERROR:

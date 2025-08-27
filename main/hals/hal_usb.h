@@ -23,6 +23,7 @@ typedef struct {
     bool right_button;
     bool middle_button;
     int8_t wheel;
+    bool device_connected;  // Add connection state tracking
     SemaphoreHandle_t mutex;
 } usb_mouse_data_t;
 
